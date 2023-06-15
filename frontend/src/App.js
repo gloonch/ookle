@@ -1,11 +1,12 @@
 import './App.css';
-import Map from './components/Map';
+import MapLayout from './components/MapLayout';
+import PopUpDetails from './components/PopUpDetails';
 
 function App() {
   return (
     <div className="App">
       {/* <PopUpDetails /> */}
-      <Map />
+      <MapLayout />
     </div>
   );
 }
