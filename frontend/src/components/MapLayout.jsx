@@ -36,8 +36,7 @@ export default function MapLayout() {
     
 
     function LocationMarker() {
-        const [position, setPosition] = useState(null)
-        const map = useMapEvents({
+        useMapEvents({
           click(e) {
             setMarkers([...markers, {geocode: e.latlng, popUp: 'You clicked here'}])
           },
