@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import 'leaflet/dist/leaflet.css'
-import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
-import { Icon, divIcon, map, point } from 'leaflet';
+import {MapContainer, TileLayer, Marker, Popup, useMapEvents} from 'react-leaflet';
+import { Icon, divIcon, point } from 'leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PopUpDetails from './PopUpDetails';
 
@@ -21,7 +21,7 @@ export default function MapLayout() {
 
     const icon = new Icon({
         iconUrl: require('../images/marker.png'),
-        iconSize: [38, 38]
+        iconSize: [36, 38]
     })
 
 
@@ -33,36 +33,30 @@ export default function MapLayout() {
         });
     };
 
-    const handleNewMarker = (e)=>{
-        console.log()
-        const {markers} = markers;
-        markers.push({geocode: e.latlng, popUp: "Dropped marker"})
-        setMarkers({markers});
-    }
+    
+
+    function LocationMarker() {
+        const [position, setPosition] = useState(null)
+        const map = useMapEvents({
+          click(e) {
+            setMarkers([...markers, {geocode: e.latlng, popUp: 'You clicked here'}])
+          },
+        })
+      }
 
 
   return (
     <div>
-      <MapContainer onClick={handleNewMarker} center={[35.7219, 51.3347]} zoom={13} >
+      <MapContainer center={[35.7219, 51.3347]} zoom={4} >
         <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
             />
-            {/* <MapConsumer>
-                {(map)=>{
-                    map.on('click', (e)=>{
-                        const {lat, lng} = e.latlng;
-                        L.marker([lat, lng], {icon}).addTo(map);
-                    })
-                    return null;
-                }}
-            </MapConsumer> */}
-        
+            <LocationMarker />
             <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
                 {markers.map(marker=>{
                     return <Marker position={marker.geocode} icon={icon}>
-                        {/* <Popup>{marker.popUp}</Popup> */}
                         <Popup><PopUpDetails /></Popup>
                     </Marker>
                 })}
