@@ -5,7 +5,6 @@ import PopUpDetails from './components/PopUpDetails';
 function App() {
   return (
     <div className="App">
-      {/* <PopUpDetails /> */}
       <MapLayout />
     </div>
   );
