@@ -10,12 +10,16 @@ export default function MapLayout() {
 
     const [markers, setMarkers] = useState([
         {
-            geocode: [35.7519, 51.2647],
-            popUp: "Hello I am the pop up 1"
+          title: 'Hello I am the pop up 1',
+          latlng: [35.7519, 51.2647],
+          description: 'This is the description for testing',
+          tags: ['history', 'science', 'personal']
         },
         {
-            geocode: [35.3519, 51.1647],
-            popUp: "Hello I am the pop up 2"
+          title: "Hello I am the pop up 2",
+          latlng: [35.3519, 51.1647],
+          description: 'This is the description for testing',
+          tags: ['history', 'science', 'personal']
         }
     ]); 
 
@@ -38,7 +42,14 @@ export default function MapLayout() {
     function LocationMarker() {
         useMapEvents({
           click(e) {
-            setMarkers([...markers, {geocode: e.latlng, popUp: 'You clicked here'}])
+            setMarkers([...markers,
+              {
+                latlng: [e.latlng.lat, e.latlng.lng],
+                title: 'You clicked here',
+                description: 'If you do not submit this marker, It will be erased after a page refresh.',
+                tags: []
+              }
+            ])
           },
         })
       }
@@ -49,14 +60,20 @@ export default function MapLayout() {
       <MapContainer center={[35.7219, 51.3347]} zoom={4} >
         <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                // url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
             />
             <LocationMarker />
             <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
                 {markers.map(marker=>{
-                    return <Marker position={marker.geocode} icon={icon}>
-                        <Popup><PopUpDetails /></Popup>
+                    return <Marker position={marker.latlng} icon={icon}>
+                        <Popup>
+                          <PopUpDetails 
+                                mTitle={marker.title} 
+                                mLatlong={marker.latlng} 
+                                mDescription={marker.description}
+                                mTags={marker.tags}/>
+                        </Popup>
                     </Marker>
                 })}
             </MarkerClusterGroup>
