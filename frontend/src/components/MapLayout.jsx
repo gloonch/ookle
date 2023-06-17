@@ -1,27 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import {MapContainer, TileLayer, Marker, Popup, useMapEvents} from 'react-leaflet';
-import { Icon, divIcon, point } from 'leaflet';
+import { Icon, divIcon, latLng, point } from 'leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PopUpDetails from './PopUpDetails';
-
+import axios from 'axios'
+import {BACKEND_URI} from '../configs/constants'
 
 export default function MapLayout() {
 
-    const [markers, setMarkers] = useState([
-        {
-          title: 'Hello I am the pop up 1',
-          latlng: [35.7519, 51.2647],
-          description: 'This is the description for testing',
-          tags: ['history', 'science', 'personal']
-        },
-        {
-          title: "Hello I am the pop up 2",
-          latlng: [35.3519, 51.1647],
-          description: 'This is the description for testing',
-          tags: ['history', 'science', 'personal']
-        }
-    ]); 
+    const [markers, setMarkers] = useState([]);
+
+    useEffect(()=>{
+      axios.get(BACKEND_URI + 'marker/')
+        .then(success => {
+          let response = success.data;
+          let data = []
+          response.map(d => {            
+              data.push({
+                latlng: d.latlong.split(','),
+                title: d.title,
+                description: d.description,
+                tags: d.tags,
+                user: d.user
+              });
+          })
+          setMarkers([...markers, ...data])
+        })
+        .catch(error=> {
+          alert('Something went wrong ' + error)
+        })
+    }, [null])
 
     const icon = new Icon({
         iconUrl: require('../images/marker.png'),
@@ -65,8 +74,8 @@ export default function MapLayout() {
             />
             <LocationMarker />
             <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
-                {markers.map(marker=>{
-                    return <Marker position={marker.latlng} icon={icon}>
+                {markers.map((marker, index) =>{
+                    return <Marker key={index} position={marker.latlng} icon={icon}>
                         <Popup>
                           <PopUpDetails 
                                 mTitle={marker.title} 

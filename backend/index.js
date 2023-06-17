@@ -1,10 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const markerRoute = require('./route/MarkerRoute');
 
+
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use('/api/v1/marker', markerRoute);
 
