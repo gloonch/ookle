@@ -22,7 +22,8 @@ export default function MapLayout() {
                 title: d.title,
                 description: d.description,
                 tags: d.tags,
-                user: d.user
+                user: d.user,
+                isCreating: false
               });
           })
           setMarkers([...markers, ...data])
@@ -56,7 +57,8 @@ export default function MapLayout() {
                 latlng: [e.latlng.lat, e.latlng.lng],
                 title: 'You clicked here',
                 description: 'If you do not submit this marker, It will be erased after a page refresh.',
-                tags: []
+                tags: [],
+                isCreating: true
               }
             ])
           },
@@ -76,12 +78,13 @@ export default function MapLayout() {
             <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
                 {markers.map((marker, index) =>{
                     return <Marker key={index} position={marker.latlng} icon={icon}>
-                        <Popup>
+                        <Popup minWidth={300} maxWidth={300} maxHeight={400}>
                           <PopUpDetails 
                                 mTitle={marker.title} 
                                 mLatlong={marker.latlng} 
                                 mDescription={marker.description}
-                                mTags={marker.tags}/>
+                                mTags={marker.tags}
+                                mIsCreating={marker.isCreating}/>
                         </Popup>
                     </Marker>
                 })}
