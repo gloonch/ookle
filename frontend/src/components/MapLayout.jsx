@@ -6,10 +6,17 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import PopUpDetails from './PopUpDetails';
 import axios from 'axios'
 import {BACKEND_URI} from '../configs/constants'
+import Navbar from './Navbar';
+import Profile from './Profile';
+import MyMarkers from './MyMarkers';
+import MarkersList from './MarkersList';
 
 export default function MapLayout() {
 
     const [markers, setMarkers] = useState([]);
+    const [myMarkersList, setMyMarkersList] = useState(false);
+    const [markersListToggle, setMarkersListToggle] = useState(false);
+    const [profileToggle, setProfileToggle] = useState(false);
 
     useEffect(()=>{
       axios.get(BACKEND_URI + 'marker/')
@@ -65,6 +72,29 @@ export default function MapLayout() {
         })
       }
 
+    const handleSearchClicked = ()=>{
+      if (myMarkersList) setMyMarkersList(false)
+        else if (!myMarkersList) setMyMarkersList(true)
+      
+      setProfileToggle(false)
+      setMarkersListToggle(false)
+    }
+
+    const handleMarkersClicked = ()=>{
+      if (markersListToggle) setMarkersListToggle(false)
+        else if (!markersListToggle) setMarkersListToggle(true)
+      
+      setMyMarkersList(false)
+      setProfileToggle(false)
+    }
+
+    const handleProfileClicked = ()=>{
+      if (profileToggle) setProfileToggle(false)
+        else if (!profileToggle) setProfileToggle(true)
+      
+      setMyMarkersList(false)
+      setMarkersListToggle(false)
+    }
 
   return (
     <div>
@@ -74,6 +104,18 @@ export default function MapLayout() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 // url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
             />
+            
+            {profileToggle && (
+              <Profile />
+            )}
+            {myMarkersList && (
+              <MyMarkers />
+            )}
+            {markersListToggle && (
+              <MarkersList markers={markers} />
+            )}
+            <Navbar onSearchClicked={handleSearchClicked} onMarkersClicked={handleMarkersClicked} onProfileClicked={handleProfileClicked}/>
+            
             <LocationMarker />
             <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
                 {markers.map((marker, index) =>{
