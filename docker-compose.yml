@@ -1,0 +1,28 @@
+version: '3'
+services:
+  frontend:
+    image: ookle/frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo
+    container_name: mongo
+    environment:
+      MONGO_INITDB_DATABASE: test
+    ports:
+      - 27018:27017
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
+      - './volumes/mongo:/data/db'
+
+  backend:
+    image: ookle/backend
+    ports: 
+      - "4000:4000"
+    depends_on:
+      - mongodb
+
+
