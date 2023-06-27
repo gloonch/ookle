@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json());
 app.use('/api/v1/marker', markerRoute);
 
-mongoose.connect('mongodb://mongo:27017/ookle',
+mongoose.connect('mongodb://localhost:27017/ookle',
                 {useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{
         console.log("MongoDB Connected...")
