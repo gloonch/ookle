@@ -20,6 +20,8 @@ services:
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
       - ./backend/volumes/mongo:/data/db
+    networks:
+      - mongo_backend
 
   backend:
     build:
@@ -29,3 +31,9 @@ services:
       - 4000:4000
     depends_on:
       - mongodb
+    networks:
+      - mongo_backend
+
+networks:
+  mongo_backend:
+    driver: bridge
