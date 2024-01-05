@@ -56,5 +56,5 @@
   "include": [
     "**/*.ts",
     "**/*.tsx"
-, "src/components/MapLayout.jsx"  ]
+, "src/components/MapLayout.tsx"  ]
 }
