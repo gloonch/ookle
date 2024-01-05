@@ -1,6 +1,6 @@
-import './App.css';
-import MapLayout from './components/MapLayout';
-import PopUpDetails from './components/PopUpDetails';
+import "./App.css";
+import MapLayout from "./components/MapLayout";
+import PopUpDetails from "./components/PopUpDetails";
 
 function App() {
   return (
